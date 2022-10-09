@@ -52,3 +52,7 @@ response.json().then(function(data){
 console.log(data);
 });
 });
+
+if(argv.j){
+    console.log(data);
+}
