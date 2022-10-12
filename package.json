@@ -1,17 +1,17 @@
 {
-  "name": "galo.sh",
+  "name": "a02-jpurvis2",
   "version": "1.0.0",
   "description": "This assignment will help you learn to create an installable Node.js command line utility.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node cli.js -n 35.92 -w 79.05 -z America/New_York"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/jpurvis2/a02-jpurvis2.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "jpurvis2",
+  "license": "LGPL-3.0-or-later",
   "bugs": {
     "url": "https://github.com/jpurvis2/a02-jpurvis2/issues"
   },
@@ -19,6 +19,9 @@
   "dependencies": {
     "minimist": "^1.2.6",
     "moment-timezone": "^0.5.37",
-    "node-fetch": "^2.6.7"
+    "node-fetch": "2.6.6"
+  },
+  "bin": {
+    "galosh.js": "./cli.js"
   }
 }

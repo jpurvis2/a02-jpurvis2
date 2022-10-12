@@ -18,7 +18,16 @@ if(argv.h === true){
 let latitude, longitude, timezone, day, prettyify
 // Make a request
 
-let baseApiURL = new URL('https://api.open-meteo.com/v1/forecast?current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,precipitation_hours,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant');
+
+
+const baseApiURL = await URL('https://api.open-meteo.com/v1/forecast?current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,precipitation_hours,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant');
+const data = await baseApiURL.json();
+ 
+if(argv.j){
+    console.log(data);
+    process.exit(0);
+}
+
 if(argv.n){
     if(argv.s){
         baseApiURL.searchParams.append('latitude', -argv.n);
@@ -55,4 +64,5 @@ console.log(data);
 
 if(argv.j){
     console.log(data);
+    process.exit(0);
 }
