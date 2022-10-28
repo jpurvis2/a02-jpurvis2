@@ -1,7 +1,13 @@
 #!/usr/bin/env node
-const fetch = require('node-fetch');
-const moment = require('moment-timezone');
-var argv = require('minimist')(process.argv.slice(2));
+import minimist from 'minimist';
+import moment from 'moment-timezone';
+import fetch from 'node-fetch';
+
+const argv = minimist(process.argv.slice(2))
+
+//const fetch = require('node-fetch');
+//const moment = require('moment-timezone');
+//var argv = require('minimist')(process.argv.slice(2));
 console.log(argv);
 if(argv.h === true){
     console.log(`
@@ -15,54 +21,67 @@ if(argv.h === true){
     `)
     process.exit(0);
 }
-let latitude, longitude, timezone, day, prettyify
+
+
 // Make a request
 
 
 
-const baseApiURL = await URL('https://api.open-meteo.com/v1/forecast?current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,precipitation_hours,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant');
-const data = await baseApiURL.json();
+const baseApiURL = new URL('https://api.open-meteo.com/v1/forecast?current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_sum,precipitation_hours,windspeed_10m_max,windgusts_10m_max,winddirection_10m_dominant');
+
  
 if(argv.j){
-    console.log(data);
     process.exit(0);
 }
 
 if(argv.n){
     if(argv.s){
-        baseApiURL.searchParams.append('latitude', -argv.n);
+        baseApiURL.searchParams.append('latitude', -argv.n.toFixed(2));
     }else{
-        baseApiURL.searchParams.append('latitude', argv.n);
+        baseApiURL.searchParams.append('latitude', argv.n.toFixed(2));
 
     }
 
 }
 if(argv.e){
-    if(argv.w){
-        baseApiURL.searchParams.append('latitude', -argv.e)
+   if(argv.w){
+        baseApiURL.searchParams.append('longitude', -argv.e.toFixed(2));
     }else{
-        baseApiURL.searchParams.append('latitude', -argv.e)
+         baseApiURL.searchParams.append('longitude', -argv.e.toFixed(2));
     }
-baseApiURL.searchParams.append('longitude', argv.e);
+
 }
-if(argv.z){
-baseApiURL.searchParams.append('timezone',moment.tz.guess());
+//if(argv.z){
+//baseApiURL.searchParams.append('timezone',moment.tz.guess());
+//}
+
+if (argv.z) {
+	let timezone = moment.tz.guess();
+    baseApiURL.searchParams.append('timezone', timezone);
 }
-if(argv.d == 0){
-console.log("today.")
-}else if (argv.d > 1 ){
-    console.log("in " + argv.d + " days.")
-} else {
-  console.log("tomorrow.")
+console.log(argv.d);
+let day = argv.d;
+if(typeof argv.d !== 'undefined'){
+    if(argv.d == 0){
+        console.log("today.")
+        }else if (argv.d > 1 ){
+            console.log("in " + argv.d + " days.")
+        } else {
+          console.log("tomorrow.")
+        }
+}else{
+    day = 1
 }
-console.log(decodeURIComponent(baseApiURL.href));
+console.log(baseApiURL.href);
 fetch(decodeURIComponent(baseApiURL.href)).then(function(response){
-response.json().then(function(data){
-console.log(data);
-});
+    response.json().then(function(data){
+        
+         if(data.daily.precipitation_hours[day] >0){
+            process.stdout.write("You might need your galoshes");
+         }else{
+             process.stdout.write("You will not need your galoshes");
+         }
+    //console.log(data);
+    });
 });
 
-if(argv.j){
-    console.log(data);
-    process.exit(0);
-}
