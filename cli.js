@@ -8,7 +8,6 @@ const argv = minimist(process.argv.slice(2))
 //const fetch = require('node-fetch');
 //const moment = require('moment-timezone');
 //var argv = require('minimist')(process.argv.slice(2));
-console.log(argv);
 if(argv.h === true){
     console.log(`
     Usage: galosh.js [options] -[n|s] LATITUDE -[e|w] LONGITUDE -z TIME_ZONE
@@ -35,31 +34,26 @@ if(argv.j){
 }
 
 if(argv.n){
-    if(argv.s){
-        baseApiURL.searchParams.append('latitude', -argv.n.toFixed(2));
-    }else{
-        baseApiURL.searchParams.append('latitude', argv.n.toFixed(2));
-
-    }
-
+    baseApiURL.searchParams.append('latitude', argv.n.toFixed(2));
+}
+if(argv.s){
+    baseApiURL.searchParams.append('latitude', -argv.s.toFixed(2));
 }
 if(argv.e){
-   if(argv.w){
-        baseApiURL.searchParams.append('longitude', -argv.e.toFixed(2));
-    }else{
-         baseApiURL.searchParams.append('longitude', -argv.e.toFixed(2));
-    }
-
+    baseApiURL.searchParams.append('longitude', argv.e.toFixed(2));
+}
+if(argv.w){
+    baseApiURL.searchParams.append('longitude', -argv.w.toFixed(2));
 }
 //if(argv.z){
-//baseApiURL.searchParams.append('timezone',moment.tz.guess());
+//baseApiURL.searchgiParams.append('timezone',moment.tz.guess());
 //}
 
 if (argv.z) {
 	let timezone = moment.tz.guess();
     baseApiURL.searchParams.append('timezone', timezone);
 }
-console.log(argv.d);
+
 let day = argv.d;
 if(typeof argv.d !== 'undefined'){
     if(argv.d == 0){
@@ -72,10 +66,11 @@ if(typeof argv.d !== 'undefined'){
 }else{
     day = 1
 }
-console.log(baseApiURL.href);
 fetch(decodeURIComponent(baseApiURL.href)).then(function(response){
     response.json().then(function(data){
-        
+        if(argv.j){
+            console.log(data);
+        }
          if(data.daily.precipitation_hours[day] >0){
             process.stdout.write("You might need your galoshes");
          }else{
